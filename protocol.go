@@ -11,7 +11,7 @@ import (
 
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p-core/sec"
-	dk "github.com/michaelvoronov/go-libp2p-secio/dumpkeys"
+	dk "github.com/libp2p/go-libp2p-secio/dumpkeys"
 
 	proto "github.com/gogo/protobuf/proto"
 	logging "github.com/ipfs/go-log"

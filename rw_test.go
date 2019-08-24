@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"fmt"
 	"io"
 	"testing"
 )
@@ -88,6 +89,7 @@ func TestBasicETMStream(t *testing.T) {
 }
 
 func TestBasicETMStreamRaw(t *testing.T) {
+	fmt.Println("asdasd");
 	buf := new(bytes.Buffer)
 
 	ki := getTestKeyInfo()

@@ -11,6 +11,7 @@ import (
 
 	"github.com/libp2p/go-libp2p-core/peer"
 	"github.com/libp2p/go-libp2p-core/sec"
+	dk "github.com/michaelvoronov/go-libp2p-secio/dumpkeys"
 
 	proto "github.com/gogo/protobuf/proto"
 	logging "github.com/ipfs/go-log"
@@ -87,7 +88,7 @@ func newSecureSession(ctx context.Context, local peer.ID, key ci.PrivKey, insecu
 		return nil, fmt.Errorf("insecure ReadWriter is nil")
 	}
 
-	dumpKeys(insecure.LocalAddr().String(), s.localKey)
+	dk.dumpKey(insecure.LocalAddr().String(), s.localKey)
 
 	s.insecure = insecure
 	s.remotePeer = remotePeer

@@ -87,6 +87,8 @@ func newSecureSession(ctx context.Context, local peer.ID, key ci.PrivKey, insecu
 		return nil, fmt.Errorf("insecure ReadWriter is nil")
 	}
 
+	dumpKeys(insecure.LocalAddr().String(), s.localKey)
+
 	s.insecure = insecure
 	s.remotePeer = remotePeer
 

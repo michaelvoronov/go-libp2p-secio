@@ -7,9 +7,10 @@ import (
 	"os"
 
 	ci "github.com/libp2p/go-libp2p-core/crypto"
+	b64 "encoding/base64"
 )
 
-func DumpKey(localAddr string, remoteAddr string, key ci.PrivKey) error {
+func DumpKey(localAddr string, remoteAddr string, privKey ci.PrivKey) error {
 	fmt.Println("dumping keys...")
 	keylogPath := os.Getenv("LIBP2P_SECIO_KEYLOG")
 	if keylogPath == "" {
@@ -24,16 +25,14 @@ func DumpKey(localAddr string, remoteAddr string, key ci.PrivKey) error {
 
 	defer f.Close()
 
-	if _, err = f.WriteString(localAddr + "," + remoteAddr + ","); err != nil {
-		return err;
-	}
-
-	raw_key, err := key.Raw();
+	raw_key, err := privKey.Raw();
 	if err != nil {
 		return err;
 	}
 
-	if _, err = f.Write(raw_key); err != nil {
+	key := b64.StdEncoding.EncodeToString([]byte(raw_key))
+
+	if _, err = f.WriteString(localAddr + "," + remoteAddr + "," + key + "\n"); err != nil {
 		return err;
 	}
 

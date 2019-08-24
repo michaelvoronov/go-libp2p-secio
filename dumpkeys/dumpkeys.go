@@ -25,12 +25,12 @@ func DumpKey(localAddr string, remoteAddr string, privKey ci.PrivKey) error {
 
 	defer f.Close()
 
-	raw_key, err := privKey.Raw();
+	marshalled_key, err := ci.MarshalPrivateKey(privKey);
 	if err != nil {
 		return err;
 	}
 
-	key := b64.StdEncoding.EncodeToString([]byte(raw_key))
+	key := b64.StdEncoding.EncodeToString(marshalled_key)
 
 	if _, err = f.WriteString(localAddr + "," + remoteAddr + "," + key + "\n"); err != nil {
 		return err;

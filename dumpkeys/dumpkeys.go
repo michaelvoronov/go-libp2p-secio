@@ -10,7 +10,15 @@ import (
 	b64 "encoding/base64"
 )
 
-func DumpKey(localAddr string, remoteAddr string, privKey ci.PrivKey) error {
+func DumpKey(
+		localAddr string,
+		remoteAddr string,
+		local ci.StretchedKeys,
+		localCT string,
+		remote ci.StretchedKeys,
+		remoteCT string,
+	) error {
+
 	fmt.Println("dumping keys...")
 	keylogPath := os.Getenv("LIBP2P_SECIO_KEYLOG")
 	if keylogPath == "" {
@@ -25,14 +33,26 @@ func DumpKey(localAddr string, remoteAddr string, privKey ci.PrivKey) error {
 
 	defer f.Close()
 
-	marshalled_key, err := ci.MarshalPrivateKey(privKey);
-	if err != nil {
-		return err;
-	}
+	localKey := b64.StdEncoding.EncodeToString(local.CipherKey)
+	localIV := b64.StdEncoding.EncodeToString(local.IV)
+	localMac := b64.StdEncoding.EncodeToString(local.MacKey)
 
-	key := b64.StdEncoding.EncodeToString(marshalled_key)
+	remoteKey := b64.StdEncoding.EncodeToString(remote.CipherKey)
+	remoteIV := b64.StdEncoding.EncodeToString(remote.IV)
+	remoteMac := b64.StdEncoding.EncodeToString(remote.MacKey)
 
-	if _, err = f.WriteString(localAddr + "," + remoteAddr + "," + key + "\n"); err != nil {
+	if _, err = f.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+		localAddr,
+		remoteAddr,
+		localKey,
+		localIV,
+		localMac,
+		localCT,
+		remoteKey,
+		remoteIV,
+		remoteMac,
+		remoteCT,
+	)); err != nil {
 		return err;
 	}
 

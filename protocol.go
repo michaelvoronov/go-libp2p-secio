@@ -88,8 +88,6 @@ func newSecureSession(ctx context.Context, local peer.ID, key ci.PrivKey, insecu
 		return nil, fmt.Errorf("insecure ReadWriter is nil")
 	}
 
-	dk.DumpKey(insecure.LocalAddr().String(), insecure.RemoteAddr().String(), s.localKey);
-
 	s.insecure = insecure
 	s.remotePeer = remotePeer
 
@@ -348,6 +346,15 @@ func (s *secureSession) runHandshakeSync() error {
 	}
 	s.local.keys = k1
 	s.remote.keys = k2
+
+	dk.DumpKey(
+			s.insecure.LocalAddr().String(),
+			s.insecure.RemoteAddr().String(),
+			s.local.keys,
+			s.local.cipherT,
+			s.remote.keys,
+			s.remote.cipherT,
+		)
 
 	// log.Debug("2.2 keys:\n\tshared: %v\n\tk1: %v\n\tk2: %v",
 	// 	s.sharedSecret, s.local.keys, s.remote.keys)

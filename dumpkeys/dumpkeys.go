@@ -44,13 +44,13 @@ func DumpKey(
 				"local_key," +
 				"local_iv," +
 				"local_mac," +
-				"local_ct," +
-				"local_hmac," +
+				"local_cipher_type," +
+				"local_hmac_type," +
 				"remote_key," +
 				"remote_iv," +
 				"remote_mac," +
-				"remote_ct," +
-				"remote_hmac\n"); err != nil {
+				"remote_cipher_type," +
+				"remote_hmac_type\n"); err != nil {
 			return err
 		}
 	} else if err != nil {

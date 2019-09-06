@@ -352,12 +352,14 @@ func (s *secureSession) runHandshakeSync() error {
 			s.insecure.RemoteAddr().String(),
 			s.local.keys,
 			s.local.cipherT,
+			s.local.hashT,
 			s.remote.keys,
 			s.remote.cipherT,
+			s.remote.hashT,
 		)
 
 	// log.Debug("2.2 keys:\n\tshared: %v\n\tk1: %v\n\tk2: %v",
-	// 	s.sharedSecret, s.local.keys, s.remote.keys)
+	//      s.sharedSecret, s.local.keys, s.remote.keys)
 
 	// =============================================================================
 	// step 2.3. MAC + Cipher -- prepare MAC + cipher

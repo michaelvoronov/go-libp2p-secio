@@ -14,21 +14,47 @@ func DumpKey(
 		localAddr string,
 		remoteAddr string,
 		local ci.StretchedKeys,
-		localCT string,
+		localCipherType string,
+		localHMACType string,
 		remote ci.StretchedKeys,
-		remoteCT string,
+		remoteCipherType string,
+		remoteHMACType string,
 	) error {
 
 	fmt.Println("dumping keys...")
 	keylogPath := os.Getenv("LIBP2P_SECIO_KEYLOG")
 	if keylogPath == "" {
 		// according to the rules both the build tag and the env variable should be provided
-		return nil;
+		return nil
 	}
 
-	f, err := os.OpenFile(keylogPath, os.O_CREATE | os.O_APPEND | os.O_WRONLY, 0600)
-	if err != nil {
-		return err;
+	f, err := os.OpenFile(keylogPath, os.O_APPEND | os.O_WRONLY, 0600)
+
+	// create csv file if not exists
+	if err != nil && os.IsNotExist(err) {
+		f, err = os.OpenFile(keylogPath, os.O_CREATE | os.O_APPEND | os.O_WRONLY, 0600)
+		if err != nil {
+			return err
+		}
+
+		// write the header
+		if _, err = f.WriteString(
+			"local_addr," +
+				"remote_addr," +
+				"local_key," +
+				"local_iv," +
+				"local_mac," +
+				"local_ct," +
+				"local_hmac," +
+				"remote_key," +
+				"remote_iv," +
+				"remote_mac," +
+				"remote_ct," +
+				"remote_hmac\n"); err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
 	}
 
 	defer f.Close()
@@ -41,20 +67,22 @@ func DumpKey(
 	remoteIV := b64.StdEncoding.EncodeToString(remote.IV)
 	remoteMac := b64.StdEncoding.EncodeToString(remote.MacKey)
 
-	if _, err = f.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+	if _, err = f.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
 		localAddr,
 		remoteAddr,
 		localKey,
 		localIV,
 		localMac,
-		localCT,
+		localCipherType,
+		localHMACType,
 		remoteKey,
 		remoteIV,
 		remoteMac,
-		remoteCT,
+		remoteCipherType,
+		remoteHMACType,
 	)); err != nil {
-		return err;
+		return err
 	}
 
-	return nil;
+	return nil
 }

@@ -50,7 +50,7 @@ func DumpKey(
 				"remote_iv," +
 				"remote_mac," +
 				"remote_cipher_type," +
-				"remote_hmac_type\n"); err != nil {
+				"remote_hmac_type"); err != nil {
 			return err
 		}
 	} else if err != nil {
@@ -67,7 +67,7 @@ func DumpKey(
 	remoteIV := b64.StdEncoding.EncodeToString(remote.IV)
 	remoteMac := b64.StdEncoding.EncodeToString(remote.MacKey)
 
-	if _, err = f.WriteString(fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+	if _, err = f.WriteString(fmt.Sprintf("\n%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
 		localAddr,
 		remoteAddr,
 		localKey,
